@@ -1,0 +1,37 @@
+{
+  "name": "iNeuroAgenda",
+  "short_name": "iNeuroAgenda",
+  "description": "Planificación asistencial multicentro del Servicio de Neurología",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#F7FBFF",
+  "theme_color": "#0A3158",
+  "lang": "es",
+  "categories": [
+    "medical",
+    "productivity",
+    "business"
+  ],
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "maskable-icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}

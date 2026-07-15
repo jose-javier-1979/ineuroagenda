@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#0A3158">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="iNeuroAgenda">
+  <meta name="description" content="Planificación asistencial multicentro del Servicio de Neurología">
+  <title>iNeuroAgenda</title>
+
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="favicon.png">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+
+  <style>
+    :root {
+      --navy: #0A3158;
+      --blue: #176FBC;
+      --pale: #F7FBFF;
+      --white: #FFFFFF;
+      --text: #17324D;
+      --muted: #667B90;
+      --line: #D8E6F2;
+      --danger: #B42318;
+      --shadow: 0 14px 40px rgba(10,49,88,.16);
+    }
+
+    * { box-sizing: border-box; }
+
+    html, body {
+      margin: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background: var(--pale);
+      font-family: Arial, Helvetica, sans-serif;
+      color: var(--text);
+    }
+
+    .app {
+      width: 100%;
+      height: 100%;
+      display: grid;
+      grid-template-rows: auto minmax(0,1fr);
+    }
+
+    .topbar {
+      min-height: 58px;
+      padding: calc(8px + env(safe-area-inset-top)) 14px 8px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      color: var(--white);
+      background: linear-gradient(135deg, var(--navy), var(--blue));
+      box-shadow: 0 4px 16px rgba(10,49,88,.18);
+      z-index: 5;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 0;
+    }
+
+    .brand img {
+      width: 38px;
+      height: 38px;
+      border-radius: 10px;
+      background: var(--white);
+    }
+
+    .brand strong {
+      display: block;
+      font-size: 17px;
+      line-height: 1.1;
+    }
+
+    .brand small {
+      display: block;
+      margin-top: 3px;
+      opacity: .76;
+      font-size: 11px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    button {
+      min-height: 38px;
+      padding: 8px 12px;
+      border: 1px solid rgba(255,255,255,.36);
+      border-radius: 10px;
+      color: var(--white);
+      background: rgba(255,255,255,.13);
+      font: inherit;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    button:hover { background: rgba(255,255,255,.22); }
+    button:focus-visible { outline: 3px solid rgba(255,255,255,.45); outline-offset: 2px; }
+
+    #installButton {
+      display: none;
+      color: var(--navy);
+      background: var(--white);
+    }
+
+    .frame-wrap {
+      position: relative;
+      min-height: 0;
+      background: var(--white);
+    }
+
+    iframe {
+      width: 100%;
+      height: 100%;
+      border: 0;
+      display: block;
+      background: var(--white);
+    }
+
+    .loading {
+      position: absolute;
+      inset: 0;
+      z-index: 3;
+      display: grid;
+      place-items: center;
+      padding: 24px;
+      background: var(--pale);
+      transition: opacity .2s ease;
+    }
+
+    .loading.hidden {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .loading-card {
+      width: min(380px, 100%);
+      padding: 26px;
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      background: var(--white);
+      box-shadow: var(--shadow);
+      text-align: center;
+    }
+
+    .loading-card img {
+      width: 82px;
+      height: 82px;
+      border-radius: 20px;
+    }
+
+    .loading-card h1 {
+      margin: 15px 0 7px;
+      color: var(--navy);
+      font-size: 24px;
+    }
+
+    .loading-card p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    .spinner {
+      width: 34px;
+      height: 34px;
+      margin: 19px auto 0;
+      border: 4px solid #DCEBF7;
+      border-top-color: var(--blue);
+      border-radius: 50%;
+      animation: spin .85s linear infinite;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .offline-banner {
+      display: none;
+      position: absolute;
+      z-index: 6;
+      left: 50%;
+      top: 12px;
+      transform: translateX(-50%);
+      padding: 9px 13px;
+      border-radius: 999px;
+      color: var(--white);
+      background: var(--danger);
+      box-shadow: var(--shadow);
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .offline-banner.show { display: block; }
+
+    @media (max-width: 620px) {
+      .topbar {
+        min-height: 52px;
+        padding-left: 10px;
+        padding-right: 10px;
+      }
+
+      .brand img {
+        width: 34px;
+        height: 34px;
+      }
+
+      .brand strong { font-size: 15px; }
+      .brand small { display: none; }
+
+      button {
+        min-height: 36px;
+        padding: 7px 9px;
+        font-size: 12px;
+      }
+
+      #reloadButton span { display: none; }
+    }
+
+    @media (display-mode: standalone) {
+      #installButton { display: none !important; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header class="topbar">
+      <div class="brand">
+        <img src="icon-192.png" alt="">
+        <div>
+          <strong>iNeuroAgenda</strong>
+          <small>Planificación asistencial multicentro</small>
+        </div>
+      </div>
+
+      <div class="actions">
+        <button id="installButton" type="button">Instalar</button>
+        <button id="reloadButton" type="button" aria-label="Recargar aplicación">
+          ↻ <span>Actualizar</span>
+        </button>
+      </div>
+    </header>
+
+    <main class="frame-wrap">
+      <div id="offlineBanner" class="offline-banner">Sin conexión. No se pueden guardar cambios.</div>
+
+      <div id="loading" class="loading">
+        <div class="loading-card">
+          <img src="icon-192.png" alt="Icono de iNeuroAgenda">
+          <h1>iNeuroAgenda</h1>
+          <p>Conectando con la agenda compartida del Servicio de Neurología.</p>
+          <div class="spinner" aria-hidden="true"></div>
+        </div>
+      </div>
+
+      <iframe
+        id="appFrame"
+        src="https://script.google.com/macros/s/AKfycbxeG_h4Nxkf-lyoUbIOsMF4At7ES4amraxCZgHXst_WFfDeUciIbK9cQZwRkwMKM1TUxg/exec"
+        title="iNeuroAgenda"
+        allow="fullscreen"
+        referrerpolicy="strict-origin-when-cross-origin"
+      ></iframe>
+    </main>
+  </div>
+
+  <script>
+    const frame = document.getElementById('appFrame');
+    const loading = document.getElementById('loading');
+    const installButton = document.getElementById('installButton');
+    const reloadButton = document.getElementById('reloadButton');
+    const offlineBanner = document.getElementById('offlineBanner');
+    let deferredPrompt = null;
+
+    frame.addEventListener('load', () => {
+      loading.classList.add('hidden');
+    });
+
+    reloadButton.addEventListener('click', () => {
+      loading.classList.remove('hidden');
+      frame.src = frame.src;
+    });
+
+    window.addEventListener('beforeinstallprompt', event => {
+      event.preventDefault();
+      deferredPrompt = event;
+      installButton.style.display = 'inline-flex';
+    });
+
+    installButton.addEventListener('click', async () => {
+      if (!deferredPrompt) return;
+      deferredPrompt.prompt();
+      await deferredPrompt.userChoice;
+      deferredPrompt = null;
+      installButton.style.display = 'none';
+    });
+
+    window.addEventListener('appinstalled', () => {
+      deferredPrompt = null;
+      installButton.style.display = 'none';
+    });
+
+    function updateConnectivity() {
+      const offline = !navigator.onLine;
+      offlineBanner.classList.toggle('show', offline);
+    }
+
+    window.addEventListener('online', () => {
+      updateConnectivity();
+      frame.src = frame.src;
+    });
+    window.addEventListener('offline', updateConnectivity);
+    updateConnectivity();
+
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./service-worker.js').catch(error => {
+          console.error('No se pudo registrar el service worker:', error);
+        });
+      });
+    }
+  </script>
+</body>
+</html>

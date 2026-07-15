@@ -1,0 +1,11 @@
+PUBLICACIÓN RÁPIDA
+
+1. Descomprima el ZIP.
+2. Publique TODOS los archivos en un alojamiento HTTPS:
+   - Cloudflare Pages (recomendado), o
+   - GitHub Pages.
+3. Abra la URL publicada en Chrome/Edge y pulse “Instalar”.
+4. En iPhone: abrir en Safari > Compartir > Añadir a pantalla de inicio.
+
+La app ya está conectada a la URL de Apps Script facilitada.
+No debe sustituir APP_WEB_URL ni editar ningún archivo.

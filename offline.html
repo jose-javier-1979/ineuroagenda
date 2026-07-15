@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0A3158">
+  <title>iNeuroAgenda · Sin conexión</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      padding: 24px;
+      font-family: Arial, Helvetica, sans-serif;
+      color: #17324D;
+      background: #F7FBFF;
+    }
+    main {
+      width: min(430px, 100%);
+      padding: 30px;
+      border: 1px solid #D8E6F2;
+      border-radius: 22px;
+      background: #FFFFFF;
+      text-align: center;
+      box-shadow: 0 14px 40px rgba(10,49,88,.14);
+    }
+    img { width: 90px; height: 90px; border-radius: 22px; }
+    h1 { color: #0A3158; }
+    p { color: #667B90; line-height: 1.55; }
+    button {
+      margin-top: 12px;
+      min-height: 44px;
+      padding: 10px 16px;
+      border: 0;
+      border-radius: 11px;
+      color: #FFFFFF;
+      background: #176FBC;
+      font: inherit;
+      font-weight: 700;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <img src="icon-192.png" alt="iNeuroAgenda">
+    <h1>Sin conexión</h1>
+    <p>
+      iNeuroAgenda necesita conexión para consultar la planificación compartida
+      y guardar modificaciones de forma segura.
+    </p>
+    <button type="button" onclick="location.reload()">Volver a intentar</button>
+  </main>
+</body>
+</html>
